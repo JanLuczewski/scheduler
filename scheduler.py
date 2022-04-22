@@ -23,6 +23,6 @@ for row in sheet.iter_rows(min_row=2,values_only=True):
         "Day" : Day,
     }
     doc.render(context)
-    doc.save(base_dir / f"{row['Inspection_ID']}_wypluty.docx")
+    doc.save(output_dir / "plik_wypluty.docx")
 
 
