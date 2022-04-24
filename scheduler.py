@@ -1,15 +1,23 @@
 from openpyxl import load_workbook
 from pathlib import Path
 from docxtpl import DocxTemplate
+import argparse
+
+parser = argparse.ArgumentParser(description='wypluwa raporty dla odbiorow')
+parser.add_argument('source', metavar='zrodlo', type=str, help='wpisz nazwe pliku zrodlowego')
+args = parser.parse_args()
+
+source = args.source
 
 base_dir = Path(__file__).parent
-workbook = load_workbook(filename=base_dir / "odbiory.xlsx")
+workbook = load_workbook(filename=base_dir / source)
 sheet = workbook.active
 
 word_template_path = base_dir / "formatka_A35.docx"
 doc = DocxTemplate(word_template_path)
 output_dir = base_dir / "OUTPUT"
 output_dir.mkdir(exist_ok=True)
+
 
 for row in sheet.iter_rows(min_row=2,values_only=True):
     Inspection_ID = row[1]
