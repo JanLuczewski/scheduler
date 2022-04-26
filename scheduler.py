@@ -2,6 +2,8 @@ from openpyxl import load_workbook
 from pathlib import Path
 from docxtpl import DocxTemplate
 import argparse
+import shutil
+
 """ scheduler.py służy do tworzenia raportów dla inspekcji.
 Program wywołuje się wpisując w terminalu 
     python3 scheduler.py source template
@@ -46,6 +48,7 @@ for row in sheet.iter_rows(min_row=2,values_only=True):
         }
         doc.render(context)
         doc.save(output_dir / f"{Inspection_ID}.docx")
+shutil.make_archive(source,'zip','OUTPUT')
 
 
 
