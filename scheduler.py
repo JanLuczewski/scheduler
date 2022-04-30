@@ -5,6 +5,7 @@ import argparse
 import shutil
 import email, smtplib, ssl
 from email import encoders
+import yagmail
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -55,17 +56,8 @@ for row in sheet.iter_rows(min_row=2,values_only=True):
         doc.save(output_dir / f"{Inspection_ID}.docx")
 shutil.make_archive(source,'zip','OUTPUT')
 
-smtp_server = 'smtp.gmail.com'
-port = 465
-
 sender = 'jan.luczewski@gmail.com'
-password = input('podaj haslo: ')
-
-receiver = 'jan.luczewski@gmail.com'
-message = MIMEMultipart('alternative')
-message['Subject'] = 'Odbiory'
-message['From'] = sender
-message['To'] = receiver
+receiver = 'jan.luczewski@crist.com.pl'
 text = """\
 
 pozdrowionka
@@ -82,36 +74,13 @@ html = """\
     </body>
 </html>
 """
-part1 = MIMEText(text, 'plain')
-part2 = MIMEText(html, 'html')
-
 
 filename = f'{source}.zip'
+yagmail.register('jan.luczewski@gmail.com','paniwladca')
+yag = yagmail.SMTP('jan.luczewski@gmail.com')
+yag.send(to=receiver,
+         subject='Odbiory3',
+         contents=[text,html],
+         attachments=filename)
 
-
-with open(filename, 'rb') as attachment:
-    part_a = MIMEBase('application' ,'octet-stream')
-    part_a.set_payload(attachment.read())
-
-encoders.encode_base64(part_a)
-
-
-part_a.add_header(
-    'Content_Disposition',
-    f'attachment; filename= {filename}',
-)
-
-
-message.attach(part1)
-message.attach(part2)
-message.attach(part_a)
-
-
-
-context = ssl.create_default_context()
-
-with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-    server.login(sender, password)
-    server.sendmail(sender, receiver, message.as_string())
-
-
+print('wysłano')
