@@ -3,12 +3,8 @@ from pathlib import Path
 from docxtpl import DocxTemplate
 import argparse
 import shutil
-import email, smtplib, ssl
-from email import encoders
 import yagmail
-from email.mime.base import MIMEBase
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
+
 
 """ scheduler.py służy do tworzenia raportów dla inspekcji.
 Program wywołuje się wpisując w terminalu 
